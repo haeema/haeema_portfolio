@@ -8,6 +8,8 @@ export const profile = {
     'Brand Positioning Expert',
     'Digital Marketing Expert',
   ],
+  /** The one title the nav carries; the hero lists them all. */
+  navRole: 'Digital Marketing Expert',
   role: 'Wedding Decorator · Jewellery Owner · Brand Positioning Expert · Digital Marketing Expert',
   location: 'Bengaluru, India',
   email: 'haeemaeg@gmail.com',

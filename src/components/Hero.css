@@ -643,15 +643,50 @@
 @media (max-width: 1279px) {
   /* Room for the fixed nav above the centred bubble, and for the bubble above her. */
   .hero {
-    --hero-pad-top: clamp(96px, 12vh, 116px);
+    --hero-pad-top: clamp(80px, 10vh, 100px);
+    /* The name block and the bubble sit above her, so the stage gives up their height. */
     --stage-height: min(
-      calc(100svh - var(--hero-pad-top) - var(--hero-pad-bottom) - 60px),
+      calc(100svh - var(--hero-pad-top) - var(--hero-pad-bottom) - 60px - 150px),
       94vw
     );
   }
 
-  .hero__note {
+  .hero__note--right {
     display: none;
+  }
+
+  /* Name and roles stacked above her head instead of beside her face. */
+  .hero__note--left {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    max-width: min(92vw, 620px);
+    text-align: center;
+  }
+
+  .hero__note--left .hero__slot {
+    display: none;
+  }
+
+  .hero__signature-box {
+    margin-bottom: 12px;
+  }
+
+  .hero__title {
+    font-size: clamp(34px, 7vw, 60px);
+    line-height: 1.02;
+  }
+
+  .hero__title br {
+    display: none;
+  }
+
+  .hero__subtitle {
+    margin-top: 10px;
+    font-size: clamp(10.5px, 1.6vw, 13px);
+    line-height: 1.6;
+    letter-spacing: 0.14em;
   }
 
   .hero__say {

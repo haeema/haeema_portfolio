@@ -48,76 +48,12 @@
   color: #8a6a71;
 }
 
-/* Narrow laptops wrap the list between roles rather than inside one. */
-.nav__roles-full {
-  display: block;
-  max-width: min(46vw, 620px);
-}
-
-.nav__role-item {
-  white-space: nowrap;
-}
-
-.nav__roles-cycle {
-  display: none;
-}
-
-/* Phones: the roles take turns in the space one role needs. */
-@media (max-width: 760px) {
-  .nav__roles-full {
-    display: none;
-  }
-
-  .nav__roles-cycle {
-    position: relative;
-    display: block;
-    height: 1.5em;
-    letter-spacing: 0.14em;
-    color: #a96f79;
-    font-weight: 500;
-  }
-
-  .nav__roles-cycle span {
-    position: absolute;
-    left: 0;
-    top: 0;
-    white-space: nowrap;
-    opacity: 0;
-    animation: nav-role-cycle 12s infinite;
-    animation-delay: calc(var(--i) * 3s);
+@media (max-width: 400px) {
+  .nav__role {
+    letter-spacing: 0.16em;
   }
 }
 
-@keyframes nav-role-cycle {
-  0% {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  4%,
-  21% {
-    opacity: 1;
-    transform: none;
-  }
-  25%,
-  100% {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-}
-
-/* Without motion, phones get the whole list in two quiet lines instead. */
-@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
-  .nav__roles-full {
-    display: block;
-    max-width: 56vw;
-    font-size: 8.5px;
-    letter-spacing: 0.1em;
-  }
-
-  .nav__roles-cycle {
-    display: none;
-  }
-}
 
 .nav__links {
   display: flex;

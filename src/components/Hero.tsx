@@ -579,7 +579,7 @@ function Hero() {
 
       <div className="hero__note hero__note--left">
         <div className="hero__signature-box">
-          <h1 className="hero__title">Haeema<br /><span>R Nathan</span></h1>
+          <h1 className="hero__title">Haeema <br /><span>R Nathan</span></h1>
           <p className="hero__subtitle">
             {/* Each title stays whole, so a wrap falls between titles rather than inside one. */}
             <span>Wedding Decorator ·</span> <span>Jewellery Owner ·</span>{' '}
