@@ -1,6 +1,15 @@
 import { useEffect, useRef } from 'react'
 import Icon from './Icon'
-import { creations, experience, pillars, positioningElements, profile, stats } from '../content'
+import {
+  coreSkills,
+  creations,
+  experience,
+  expertise,
+  pillars,
+  positioningElements,
+  profile,
+  stats,
+} from '../content'
 import './Portfolio.css'
 
 /** Fades sections in as they scroll into view; everything is visible without JS. */
@@ -184,6 +193,55 @@ function Portfolio() {
               Clarity. <em>Creativity.</em> Positioning.
             </p>
           </aside>
+        </div>
+      </section>
+
+      {/* ---- Digital marketing expertise ---- */}
+      <section id="expertise" className="pf-section pf-expertise">
+        <div className="pf-wrap">
+          <header className="pf-heading pf-heading--center" data-reveal>
+            <Eyebrow>Digital Marketing Expert</Eyebrow>
+            <h2 className="pf-heading__title">
+              Digital Marketing <em>Expertise</em>
+            </h2>
+            <p className="pf-heading__lead">
+              {profile.years} years of marketing in the wedding and creative industry, using Meta
+              advertising, Instagram, SEO and creative storytelling to build visibility, engagement
+              and enquiries.
+            </p>
+          </header>
+
+          <div className="pf-expertise__grid">
+            {expertise.map((group, index) => (
+              <article
+                key={group.title}
+                className="pf-card pf-expert"
+                data-reveal
+                style={delay((index % 2) * 110)}
+              >
+                <div className="pf-expert__head">
+                  <span className="pf-ring">
+                    <Icon name={group.icon} />
+                  </span>
+                  <h3>{group.title}</h3>
+                </div>
+                <ul className="pf-expert__list">
+                  {group.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+
+          <div className="pf-skills" data-reveal>
+            <h3 className="pf-skills__title">Core Skills</h3>
+            <ul className="pf-skills__list">
+              {coreSkills.map((skill) => (
+                <li key={skill}>{skill}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 

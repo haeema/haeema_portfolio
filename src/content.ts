@@ -2,8 +2,13 @@ import type { IconName } from './components/Icon'
 
 export const profile = {
   name: 'Haeema R Nathan',
-  role: 'Wedding Decorator · Jewellery Owner · Brand Positioning Expert',
-  shortRole: 'Wedding Decorator · Jewellery Owner',
+  roles: [
+    'Wedding Decorator',
+    'Jewellery Owner',
+    'Brand Positioning Expert',
+    'Digital Marketing Expert',
+  ],
+  role: 'Wedding Decorator · Jewellery Owner · Brand Positioning Expert · Digital Marketing Expert',
   location: 'Bengaluru, India',
   email: 'haeemaeg@gmail.com',
   phone: '+91 78292 81118',
@@ -80,4 +85,71 @@ export const experience: { icon: IconName; title: string; body: string }[] = [
     title: 'Positioning',
     body: 'Building an identity that people recognise, remember and connect with.',
   },
+]
+
+export const expertise: { icon: IconName; title: string; items: string[] }[] = [
+  {
+    icon: 'megaphone',
+    title: 'Meta Advertising',
+    items: [
+      'Facebook & Instagram Ads',
+      'Lead Generation Campaigns',
+      'Audience Targeting',
+      'Creative Testing',
+      'Campaign Optimization',
+      'Retargeting Strategies',
+    ],
+  },
+  {
+    icon: 'reel',
+    title: 'Instagram Marketing',
+    items: [
+      'Content Strategy',
+      'Reels Strategy',
+      'Wedding Portfolio Marketing',
+      'Engagement Growth',
+      'Brand Storytelling',
+      'Content Planning',
+    ],
+  },
+  {
+    icon: 'search',
+    title: 'SEO',
+    items: [
+      'Keyword Research',
+      'On-page SEO',
+      'Content Optimization',
+      'Local SEO',
+      'Search Visibility',
+    ],
+  },
+  {
+    icon: 'palette',
+    title: 'Creative Marketing',
+    items: [
+      'Canva Design',
+      'Ad Creatives',
+      'Social Media Graphics',
+      'Video Marketing Concepts',
+      'Wedding Campaign Concepts',
+      'Emotional Storytelling',
+    ],
+  },
+]
+
+export const coreSkills = [
+  'Meta Ads & Lead Generation',
+  'Facebook & Instagram Marketing',
+  'Social Media Strategy',
+  'SEO',
+  'Content Marketing',
+  'Canva & Creative Design',
+  'Digital Brand Building',
+  'Lead Generation Campaigns',
+  'Audience Targeting',
+  'Campaign Optimization',
+  'Wedding Industry Marketing',
+  'Client Acquisition Strategy',
+  'Visual Storytelling',
+  'Social Media Content Planning',
 ]

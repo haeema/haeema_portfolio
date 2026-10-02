@@ -641,6 +641,15 @@
 }
 
 @media (max-width: 1279px) {
+  /* Room for the fixed nav above the centred bubble, and for the bubble above her. */
+  .hero {
+    --hero-pad-top: clamp(96px, 12vh, 116px);
+    --stage-height: min(
+      calc(100svh - var(--hero-pad-top) - var(--hero-pad-bottom) - 60px),
+      94vw
+    );
+  }
+
   .hero__note {
     display: none;
   }

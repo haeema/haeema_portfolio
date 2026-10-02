@@ -583,7 +583,7 @@ function Hero() {
           <p className="hero__subtitle">
             {/* Each title stays whole, so a wrap falls between titles rather than inside one. */}
             <span>Wedding Decorator ·</span> <span>Jewellery Owner ·</span>{' '}
-            <span>Brand Positioning Expert</span>
+            <span>Brand Positioning Expert ·</span> <span>Digital Marketing Expert</span>
           </p>
         </div>
         <div className="hero__slot">
