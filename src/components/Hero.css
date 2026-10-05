@@ -646,7 +646,7 @@
     --hero-pad-top: clamp(80px, 10vh, 100px);
     /* The name block and the bubble sit above her, so the stage gives up their height. */
     --stage-height: min(
-      calc(100svh - var(--hero-pad-top) - var(--hero-pad-bottom) - 60px - 150px),
+      calc(100svh - var(--hero-pad-top) - var(--hero-pad-bottom) - 60px - 120px),
       94vw
     );
   }

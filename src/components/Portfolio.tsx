@@ -65,12 +65,11 @@ function Portfolio() {
           </h2>
           <div className="pf-rule" aria-hidden="true" />
           <p className="pf-lead">
-            I’m <strong>{profile.name}</strong>, a wedding decorator and jewellery business owner
+            I’m <strong>{profile.name}</strong>, a brand positioning and digital marketing expert
             with <strong>{profile.years} years of experience in the wedding and creative industry</strong>.
           </p>
           <p className="pf-lead">
-            From designing breathtaking wedding spaces to curating exquisite jewellery, I bring
-            together <strong>creativity, craftsmanship and a strong understanding of brand
+            I bring together <strong>creativity, craftsmanship and a strong understanding of brand
             positioning</strong> to create experiences that stand apart.
           </p>
           <div className="pf-actions">

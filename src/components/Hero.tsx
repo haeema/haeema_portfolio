@@ -582,7 +582,6 @@ function Hero() {
           <h1 className="hero__title">Haeema <br /><span>R Nathan</span></h1>
           <p className="hero__subtitle">
             {/* Each title stays whole, so a wrap falls between titles rather than inside one. */}
-            <span>Wedding Decorator ·</span> <span>Jewellery Owner ·</span>{' '}
             <span>Brand Positioning Expert ·</span> <span>Digital Marketing Expert</span>
           </p>
         </div>
@@ -595,7 +594,7 @@ function Hero() {
             <span className="hero__hint--coarse">Tap me to say hi</span>
           </div>
           <div className="hero__bubble" data-when="left">
-            <span>Planning a wedding to remember?</span>
+            <span>Your competitors are marketing. Are you?</span>
           </div>
           <div className="hero__bubble" data-when="notice">
             <span>Hey, caught you!</span>
@@ -609,7 +608,7 @@ function Hero() {
       <div className="hero__note hero__note--right">
         <div className="hero__slot">
           <div className="hero__bubble" data-when="right">
-            <span>Looking for the perfect jewellery?</span>
+            <span>Looking to establish your brand?</span>
           </div>
         </div>
       </div>
@@ -622,10 +621,10 @@ function Hero() {
           <span className="hero__hint--coarse">Tap me to say hi</span>
         </div>
         <div className="hero__bubble" data-when="left">
-          <span>Planning a wedding to remember?</span>
+          <span>Your competitors are marketing. Are you?</span>
         </div>
         <div className="hero__bubble" data-when="right">
-          <span>Looking for the perfect jewellery?</span>
+          <span>Looking to establish your brand?</span>
         </div>
         <div className="hero__bubble" data-when="notice">
           <span>Hey, caught you!</span>
