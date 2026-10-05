@@ -84,8 +84,8 @@ function resolveZone(x: number, previous: Zone): Exclude<Zone, 'away'> {
 function Hero() {
   const heroRef = useRef<HTMLElement>(null)
   const stageRef = useRef<HTMLButtonElement>(null)
-  const spriteRef = useRef<HTMLDivElement>(null)
-  const ghostRef = useRef<HTMLDivElement>(null)
+  const spriteRef = useRef<HTMLCanvasElement>(null)
+  const ghostRef = useRef<HTMLCanvasElement>(null)
   const metaRef = useRef<SpriteMetadata | null>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
   const spotlightRef = useRef<HTMLDivElement>(null)
@@ -109,37 +109,50 @@ function Hero() {
   const idleLoopRef = useRef(false)
   const idleDirRef = useRef(1)
 
-  const activeSheetRef = useRef(-1)
   const scaleRef = useRef(1)
   const offsetXRef = useRef(0)
   const heroBoxRef = useRef({ left: 0, width: 1 })
   const readyRef = useRef(false)
   const reducedMotionRef = useRef(false)
-  const decodedSheetsRef = useRef<HTMLImageElement[]>([])
+  /**
+   * Decoded sheets by index, held as bitmaps. Frames are painted onto a canvas
+   * from these rather than swapped in as CSS backgrounds: the browser is free to
+   * discard a decoded 16000px background and re-decode it on the next swap,
+   * which showed as a blank flash each time playback crossed a sheet.
+   */
+  const sheetsRef = useRef<(ImageBitmap | HTMLImageElement | undefined)[]>([])
+  const dprRef = useRef(1)
 
   const [state, setState] = useState<'loading' | 'ready'>('loading')
 
   const drawFrame = useCallback((frame: number) => {
     const meta = metaRef.current
-    const sprite = spriteRef.current
-    if (!meta || !sprite) return
+    const ctx = spriteRef.current?.getContext('2d')
+    if (!meta || !ctx) return
 
     const clamped = Math.min(Math.max(frame, 0), meta.frameCount - 1)
     const sheetIndex = Math.min(
       Math.floor(clamped / meta.framesPerSheet),
       meta.sheets.length - 1,
     )
-    const sheet = meta.sheets[sheetIndex]
-    const scale = scaleRef.current
+    // Not decoded yet: keep the last frame on screen rather than painting nothing.
+    const source = sheetsRef.current[sheetIndex]
+    if (!source) return
 
-    if (sheetIndex !== activeSheetRef.current) {
-      activeSheetRef.current = sheetIndex
-      sprite.style.backgroundImage = `url("${sheet.file}")`
-      sprite.style.backgroundSize = `${sheet.width * scale}px ${sheet.height * scale}px`
-    }
-
-    const localFrame = clamped - sheet.startFrame
-    sprite.style.backgroundPositionX = `${offsetXRef.current - localFrame * meta.frameWidth * scale}px`
+    const localFrame = clamped - meta.sheets[sheetIndex].startFrame
+    const scale = scaleRef.current * dprRef.current
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    ctx.drawImage(
+      source,
+      localFrame * meta.frameWidth,
+      0,
+      meta.frameWidth,
+      meta.frameHeight,
+      offsetXRef.current * dprRef.current,
+      0,
+      meta.frameWidth * scale,
+      meta.frameHeight * scale,
+    )
     drawnFrameRef.current = clamped
   }, [])
 
@@ -151,11 +164,15 @@ function Hero() {
     (frame: number) => {
       const ghost = ghostRef.current
       const sprite = spriteRef.current
-      if (ghost && sprite) {
+      const ghostCtx = ghost?.getContext('2d')
+      if (ghost && sprite && ghostCtx) {
         ghost.style.transition = 'none'
-        ghost.style.backgroundImage = sprite.style.backgroundImage
-        ghost.style.backgroundSize = sprite.style.backgroundSize
-        ghost.style.backgroundPosition = `${sprite.style.backgroundPositionX} ${sprite.style.backgroundPositionY}`
+        if (ghost.width !== sprite.width || ghost.height !== sprite.height) {
+          ghost.width = sprite.width
+          ghost.height = sprite.height
+        }
+        ghostCtx.clearRect(0, 0, ghost.width, ghost.height)
+        ghostCtx.drawImage(sprite, 0, 0)
         ghost.style.transform = sprite.style.transform
         ghost.style.opacity = '1'
         void ghost.offsetWidth
@@ -208,13 +225,22 @@ function Hero() {
     const scale = Math.max(width / meta.frameWidth, height / usableHeight)
     scaleRef.current = scale
     offsetXRef.current = (width - meta.frameWidth * scale) / 2
-    sprite.style.backgroundPositionY = '0px'
+
+    // Backing store at device resolution (capped), so frames stay crisp.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    dprRef.current = dpr
+    sprite.width = Math.round(width * dpr)
+    sprite.height = Math.round(height * dpr)
+    const ctx = sprite.getContext('2d')
+    if (ctx) ctx.imageSmoothingQuality = 'high'
 
     const heroBox = hero.getBoundingClientRect()
     heroBoxRef.current = { left: heroBox.left, width: heroBox.width }
 
-    activeSheetRef.current = -1
-    drawFrame(drawnFrameRef.current < 0 ? 0 : drawnFrameRef.current)
+    // Resizing a canvas clears it, so repaint whatever was showing.
+    const frame = drawnFrameRef.current < 0 ? currentFrameRef.current : drawnFrameRef.current
+    drawnFrameRef.current = -1
+    drawFrame(Math.round(frame))
   }, [drawFrame])
 
   const tick = useCallback(
@@ -378,11 +404,15 @@ function Hero() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     reducedMotionRef.current = prefersReducedMotion
 
-    const preload = async (file: string) => {
+    const preload = async (index: number, file: string) => {
       const image = new Image()
       image.src = file
       await image.decode()
-      decodedSheetsRef.current.push(image)
+      // A bitmap stays decoded and GPU-ready; the image itself is the fallback.
+      sheetsRef.current[index] =
+        typeof createImageBitmap === 'function'
+          ? await createImageBitmap(image).catch(() => image)
+          : image
     }
 
     const load = async () => {
@@ -394,7 +424,7 @@ function Hero() {
       if (prefersReducedMotion) startFrame = meta.holdFrame
       const firstSheet = Math.floor(startFrame / meta.framesPerSheet)
 
-      await preload(meta.sheets[firstSheet].file)
+      await preload(firstSheet, meta.sheets[firstSheet].file)
       if (cancelled) return
 
       metaRef.current = meta
@@ -408,10 +438,13 @@ function Hero() {
 
       if (prefersReducedMotion) return
 
-      const rest = meta.sheets.filter(
-        (sheet, index) => index !== firstSheet && sheet.startFrame <= meta.holdFrame,
+      await Promise.all(
+        meta.sheets.map((sheet, index) =>
+          index !== firstSheet && sheet.startFrame <= meta.holdFrame
+            ? preload(index, sheet.file)
+            : undefined,
+        ),
       )
-      await Promise.all(rest.map((sheet) => preload(sheet.file)))
       if (cancelled) return
 
       // Desktop and touch both start typing and wait to be noticed.
@@ -642,8 +675,8 @@ function Hero() {
         onClick={handleStageClick}
         aria-label="Haeema R Nathan at her desk. Move the cursor or tap across the hero to catch her attention."
       >
-        <div className="hero__sprite" ref={spriteRef} />
-        <div className="hero__sprite hero__sprite--ghost" ref={ghostRef} />
+        <canvas className="hero__sprite" ref={spriteRef} />
+        <canvas className="hero__sprite hero__sprite--ghost" ref={ghostRef} />
       </button>
 
       <a className="hero__scroll" href="#intro">
